@@ -27,8 +27,8 @@ def main(field[2] root, \
                     then [...current_hash, ...hash_value] \
                     else  [...hash_value, ...current_hash] fi
 
-        current_hash = sha256padded512(inter_hash[..256], inter_hash[256..])
-        current_hash = sha256padded256(current_hash)
+        current_hash = if proof[offset] != 0 then sha256padded512(inter_hash[..256], inter_hash[256..]) else current_hash fi
+        current_hash = if proof[offset] != 0 then sha256padded256(current_hash) else current_hash fi
     endfor
     
     
