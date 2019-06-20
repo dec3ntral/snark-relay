@@ -13,6 +13,7 @@ def main(field[2] root, \
     c1 = unpack128(tx_hash[0])
     c2 = unpack128(tx_hash[1])
     field[256] current_hash = [...c1, ...c2]
+    field[256] updated_hash = [...c1, ...c2]
 
     field[256] zeroes = [ \
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
@@ -42,6 +43,7 @@ def main(field[2] root, \
         
         position * position == position
 
+<<<<<<< HEAD
         field[512] inter_hash = \
                     if position == 0 \
                     then [...current_hash, ...hash_value] \
@@ -54,6 +56,15 @@ def main(field[2] root, \
         current_hash = if [...hash_value] == [...zeroes] \
             then current_hash \
             else sha256padded256(current_hash) fi
+=======
+        field[512] inter_hash = if position == 0 \
+                    then [...current_hash, ...hash_value] \
+                    else  [...hash_value, ...current_hash] fi
+
+        updated_hash = sha256padded512(inter_hash[..256], inter_hash[256..])
+        updated_hash = sha256padded256(updated_hash)
+        current_hash = if proof[offset] > 0 then updated_hash else current_hash fi
+>>>>>>> ccf426e8b8143212afb82a96aaf93b8ef3edf516
     endfor
     
     c5 = unpack128(root[0])
