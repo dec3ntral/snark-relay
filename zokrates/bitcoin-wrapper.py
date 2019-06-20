@@ -22,3 +22,10 @@ merkleProof = rpc_connection.gettxoutproof(["938a1e3dfc13d96ca29e64d15a059f06830
 # print(len(merkleProof))
 print(binascii.unhexlify(merkleProof))
 
+
+
+
+
+
+
+
