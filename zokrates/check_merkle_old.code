@@ -1,0 +1,59 @@
+import "hashes/sha256/512bitPacked.code" as sha256packed
+import "hashes/sha256/512bitPadded.code" as sha256padded
+import "utils/pack/unpack128.code" as unpack128
+
+def main(field[2] root, \
+         field[33] proof, \
+         field[2] tx_hash) -> (field):
+    field[2] current_hash = tx_hash
+    for field i in 0..11 do
+        field offset = i * 3
+        field[2] hash_value = [proof[offset], proof[offset + 1]]
+        field position = proof[offset + 2]
+        field[2] left_hash = sha256padded([...unpack128(current_hash[0]), ...current_hash[1]], \
+                                           [...unpack128(hash_value[0]), ...unpack128(hash_value[1])])
+        
+        field[2] d_left_hash = sha256packed([left_hash[0], 0, left_hash[1], 0])
+        
+        field[2] right_hash = sha256padded([hash_value[0], hash_value[1], \
+                                            current_hash[0], current_hash[1]])
+
+        field[2] d_right_hash = sha256packed([right_hash[0], 0, right_hash[1], 0])
+
+        current_hash = if hash_value[0] == 0 \
+                       then current_hash \
+                       else if position == 0 \
+                       then d_left_hash \
+                       else d_right_hash fi fi
+    endfor
+    current_hash[0] == root[0]
+    current_hash[1] == root[1]
+    return 1
+
+
+
+
+'''
+So, apparently, we need to do something like this:
+
+block0: 256bits, block1: 256bits
+
+    sha_1024([...block0, ...block1]) -> hashes/sha256/1024bit.code or hashes/sha256/512padded.code
+    res = shacompression([...block0, ...block1, ...padding]) where padding is 512bits
+    padding = [1, 0, ..., 0, ...[512 as 64 bits]]
+
+    res is 256 bits
+
+    sha_512(res) -> 256padded not available -> take hashes/sha256/512bit.code [...message, ]
+    shacompression([...res, ...padding]) where padding = [1, 0, ..., 0, ...[256 as 64 bits]]
+
+
+
+    shaPacked(a, b)
+       abits, bbits = unpack(a, b)
+       r = sha(abits, bbits)
+       pack(a)
+
+
+    [...unpack128(h0), ...unpack128(h1)], []
+'''

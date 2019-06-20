@@ -1,0 +1,36 @@
+import "hashes/sha256/512bitPacked.code" as sha256packed512
+import "hashes/sha256/512bitPadded.code" as sha256padded512
+import "hashes/sha256/256bitPadded.code" as sha256padded256
+import "utils/pack/unpack128.code" as unpack128
+import "utils/pack/unpack256.code" as unpack256
+
+
+def main(field[2] root, \
+         field[3] proof, \
+         field[2] tx_hash) -> (field):
+
+    c1 = unpack128(tx_hash[0])
+    c2 = unpack128(tx_hash[1])
+    field[256] current_hash = [...c1, ...c2]
+
+    c3 = unpack128(proof[0])
+    c4 = unpack128(proof[1])
+    
+    field[256] hash_value = [...c3, ...c4]
+    
+    field position = proof[2]
+    position * position == position
+
+    field[512] inter_hash =  if position == 0 \
+                then [...current_hash, ...hash_value] \
+                else  [...hash_value, ...current_hash] fi
+
+    current_hash = sha256padded512(inter_hash[..256], inter_hash[256..])
+    current_hash = sha256padded256(current_hash)
+    
+    c5 = unpack128(root[0])
+    c6 = unpack128(root[1])
+
+    field[256] merkle_root = [...c5, ...c6]
+    current_hash == merkle_root
+    return 1
