@@ -26,8 +26,12 @@ def double_sha256(data):
     hash2 = hashlib.sha256(binascii.unhexlify(hash)).hexdigest()
     return hash2
 
+'''
+Generates merkle tree path, given a
+''' 
+def calc_merkle(index, txids):
+    # TODO
 
-def calc_merkle(txid, proof)
 
 root_LE = flip32Bytes(root)
 left_LE = flip32Bytes(left)
