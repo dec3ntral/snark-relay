@@ -20,7 +20,7 @@ def unpack_int(n, bits):
 def str_to_int(string):
     return int(string,16)
 
-def construct_arguments(root, proof, txid):
+def construct_arguments_small(root, proof, txid):
     arguments = []
     # root
     arguments.extend(
@@ -31,8 +31,21 @@ def construct_arguments(root, proof, txid):
             )
     arguments.append(proof[0][1])
 
+    # txid to be proven
+    arguments.extend(
+        unpack_int(str_to_int(txid), 128)
+    )
+    return [str(v) for v in arguments]
+
+def construct_arguments(root, proof, txid):
+    arguments = []
+    # root
+    arguments.extend(
+        unpack_int(str_to_int(root), 128)
+    )
+
     # proof - max length = 33
-    '''
+
     for i in range(0,11):
         if i < len(proof):
             arguments.extend(
@@ -42,7 +55,6 @@ def construct_arguments(root, proof, txid):
         else:
             arguments.extend([0, 0, 0])
 
-    '''
     # txid to be proven
     arguments.extend(
         unpack_int(str_to_int(txid), 128)

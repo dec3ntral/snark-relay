@@ -13,16 +13,17 @@ def main(field[2] root, \
     c2 = unpack128(tx_hash[1])
     field[256] current_hash = [...c1, ...c2]
 
-    for field i in 0...1 do
-        c3 = unpack128(proof[0])
-        c4 = unpack128(proof[1])
-
+    for field i in 0..11 do
+        field offset = i * 3
+        c3 = unpack128(proof[offset])
+        c4 = unpack128(proof[offset + 1])
         field[256] hash_value = [...c3, ...c4]
         
-        field position = proof[2]
+        field position = proof[offset +2]
         position * position == position
 
-        field[512] inter_hash =  if position == 0 \
+        field[512] inter_hash = \
+                    else if position == 0 \
                     then [...current_hash, ...hash_value] \
                     else  [...hash_value, ...current_hash] fi
 
