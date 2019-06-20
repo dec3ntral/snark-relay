@@ -98,7 +98,9 @@ print(double_sha256(left_LE+right_LE))
 
 # proof: [(left-hash, 0), (right-hash, 1)]
 
+# arguments = construct_arguments_small(root_LE, [(left_LE, 1)], right_LE)
 arguments = construct_arguments(root_LE, [(left_LE, 1)], right_LE)
+
 print(arguments)
 subprocess.call(["zokrates", "compute-witness", "-a", *arguments])
 
