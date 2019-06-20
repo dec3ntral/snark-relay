@@ -31,7 +31,7 @@ def main(field[2] root, \
 
         updated_hash = sha256padded512(inter_hash[..256], inter_hash[256..])
         updated_hash = sha256padded256(updated_hash)
-        current_hash = if proof[offset] > 0 then updated_hash else current_hash fi
+        current_hash = if proof[offset] == 0 && proof[offset + 1] == 0 then current_hash else updated_hash fi
     endfor
     
     c5 = unpack128(root[0])
