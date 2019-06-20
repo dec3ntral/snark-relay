@@ -25,10 +25,9 @@ def main(field[2] root, \
         
         position * position == position
 
-        field[512] inter_hash = 
-                elseif position == 0 \
-                then sha256padded512([...current_hash], []...hash_value]) \
-                else  sha256padded512([...hash_value], []...current_hash]) fi
+        field[512] inter_hash = if position == 0 \
+                    then [...current_hash, ...hash_value] \
+                    else  [...hash_value, ...current_hash] fi
 
         updated_hash = sha256padded512(inter_hash[..256], inter_hash[256..])
         updated_hash = sha256padded256(updated_hash)
