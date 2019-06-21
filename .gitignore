@@ -2,3 +2,5 @@
 *.key
 */out.code
 */witness
+*/venv/*
+*/build/*
